@@ -15,7 +15,7 @@
 
 #define PIN 2
 #define BUTTON 0
-#define NUMPIXELS 25
+#define NUMPIXELS 16
 
 #define LIGHTOFFDELAY 5000
 
@@ -90,9 +90,26 @@ void turnAllOn() {
 //  turnAllOff();
 }
 
+// Turns on all pixels in ring, setting then to white
+void turnAllOnButton() {
+  Serial.print("In All On Button!!");
+  for(int i=0;i<NUMPIXELS;i++){
+    pixels.setBrightness(40);
+    // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
+    pixels.setPixelColor(i, pixels.Color(255,255,255)); 
+    pixels.show(); // This sends the updated pixel color to the hardware.
+  }
+
+  // This might not work as it is blocking. Will leave here for the moment.
+  delay(LIGHTOFFDELAY);
+  turnAllOff();
+}
+
 // Turns off all pixels in ring
 void turnAllOff() {
+  Serial.print(NUMPIXELS);
   for(int i=0;i<NUMPIXELS;i++){
+    Serial.println(i);
     // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
     pixels.setPixelColor(i, pixels.Color(0,0,0)); 
     pixels.show(); // This sends the updated pixel color to the hardware.
@@ -164,7 +181,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
   } else {
     // Strange bug where all but one led turns off
     // Maybe because of it being a fake ring.
-    turnAllOff();
     turnAllOff();
   }
 }
